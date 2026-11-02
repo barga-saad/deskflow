@@ -1,5 +1,7 @@
 # DeskFlow
 
+[![CI](https://github.com/barga-saad/deskflow/actions/workflows/ci.yml/badge.svg)](https://github.com/barga-saad/deskflow/actions/workflows/ci.yml)
+
 A full-stack customer support platform. Customers open tickets, agents work through them, and every new ticket is triaged automatically by an AI model, with keyword rules as a safety net.
 
 **Stack:** Java 17, Spring Boot 4, Spring Security, PostgreSQL, Flyway, React 19, TypeScript, Docker, GitHub Actions.
