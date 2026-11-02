@@ -1,0 +1,11 @@
+# Zero-setup profile: an in-memory database and demo data. Never use it in production.
+spring:
+  datasource:
+    url: jdbc:h2:mem:deskflow;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+
+deskflow:
+  seed-demo-data: true
+  jwt:
+    secret: dev-only-secret-change-me-dev-only-secret-change-me

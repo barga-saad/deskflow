@@ -1,0 +1,10 @@
+# Uses H2 by default. CI sets DB_URL, DB_USER and DB_PASSWORD to run the same tests on real PostgreSQL.
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:deskflow-test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+
+deskflow:
+  jwt:
+    secret: test-only-secret-test-only-secret-test-only-secret

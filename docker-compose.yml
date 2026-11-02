@@ -1,0 +1,58 @@
+# Local demo stack. The default secrets below are for local use only.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: deskflow
+      POSTGRES_USER: deskflow
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-deskflow}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deskflow -d deskflow"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/deskflow
+      DB_USER: deskflow
+      DB_PASSWORD: ${DB_PASSWORD:-deskflow}
+      JWT_SECRET: ${JWT_SECRET:-local-demo-secret-change-me-local-demo-secret}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      AI_ENABLED: ${AI_ENABLED:-false}
+      AI_BASE_URL: ${AI_BASE_URL:-http://ollama:11434/v1}
+      AI_MODEL: ${AI_MODEL:-llama3.2}
+      AI_API_KEY: ${AI_API_KEY:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health/readiness | grep -q UP"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 15s
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # Optional local AI model: docker compose --profile ai up
+  ollama:
+    image: ollama/ollama:latest
+    profiles: ["ai"]
+    volumes:
+      - ollama-data:/root/.ollama
+
+volumes:
+  db-data:
+  ollama-data:
